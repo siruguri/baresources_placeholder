@@ -1,6 +1,11 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 
+User.delete_all
+User.create([
+              {admin: true, email: 'admin@admin.com', password: "admin123"}
+])
+
 Category.delete_all
 Category.create([
   {name: 'Consumer Financial Education', description: '<u>Consumer Financial Education</u>- includes all forms of one-on-one, small group, and workshop activities to help clients meet financial goals. Please see the <a href="glossary.shtml">glossary</a> for definitions of specific activities.'},
@@ -108,87 +113,14 @@ Service.create([
   {name: 'Small business loan'}  
 ])
 
+# Pick 3 random orgs
+orgs=Organization.all
+
 Location.delete_all
 Location.create([
-  { address: '1431 23rd Avenue', city: 'Oakland', zipcode: '94606', hours: 'M-F 10am - 5pm', wheelchair_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: '23rd and International/23rd and Foothill', directions: 'On 23rd Avenue between International and Foothill'},
+  { address: '1431 23rd Avenue', city: 'Oakland', zipcode: '94606', hours: 'M-F 10am - 5pm', wheelchair_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: '23rd and International/23rd and Foothill', directions: 'On 23rd Avenue between International and Foothill', organization_id: orgs[0].id},
 
-  { address: '677 West Ranger Avenue', city: 'Alameda', zipcode: '94501'},
+  { address: '677 West Ranger Avenue', city: 'Alameda', zipcode: '94501', organization_id: orgs[1].id},
 
-  { address: '25800 Carlos Bee Blvd', city: 'Hayward', zipcode: '94542'},
-
-  { name: 'Teresa McGill', email: 'tmcgill@davisstreet.org', phone: '(510)347-4620 ', fax: '(510)483-4486', address: '3081 Teagarden Street', city: 'San Leandro', zipcode: '94577', hours: 'Mon-Thurs 8 am to 8 pm and Fri 8 am to 6 pm. Check schedule for hours for specific programs', wheelchair_accessible: 1, bart_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: 'San Leandro BART', directions: 'From San Leandro BART-limited free LINKS Shuttle\r\nAC Transit stop on Marina Blvd or to San Leandro BART and LINKS Shuttle', free_parking: 1},
-
-  { name: 'John Holman', email: 'john.holman.work@gmail.com', phone: '(510)444-9655', fax: '(510)444-9955', address: '2572-2580 San Pablo Avenue', city: 'Oakland', zipcode: '94612'},
-
-  { name: 'Hazel Knowles', email: 'hazelk@4c-alameda.org', phone: '(510)584-3120 ', address: '22351 City Center Drive Suite 200', city: 'Hayward', zipcode: '94541', hours: '9:00 a.m. - 5:00 p.m.\r\nMonday - Friday', wheelchair_accessible: 1, muni_bus_accessible: 1, bart_accessible: 1, ac_bus_accessible: 1, free_parking: 1},
-
-  { name: 'Otis Ward', email: 'OWard@acgov.org', phone: '(510) 259-3819', fax: '(510) 259-3820', address: '24100 Amador Street 3rd Floor', city: 'Hayward', zipcode: '94544', hours: 'Wed evenings. Appointments available in Fremont, Livermore and Alameda', wheelchair_accessible: 1, muni_bus_accessible: 1, bart_accessible: 1, public_transportation_stop: 'Hayward', directions: 'Take BART to the Hayward Station and take the 92 Bus to the Eden Area Multiservice Center'},
-
-  { name: 'Yvonne Payton', email: 'ypsacdc@sbcglobal.net', phone: '(510)536-1715', fax: '(510) 536-4066', address: '2228 E 15th Street', city: 'Oakland', zipcode: '94606', hours: '8AM - 5PM\r\nBack taxes up to 5:30PM', wheelchair_accessible: 1, muni_bus_accessible: 1, bart_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: 'Fruitvale Bart'},
-
-  { name: 'Jacqui Gordon', email: 'jgordon@fdic.gov', phone: '(415)808-8241', fax: '(415) 808-7937', address: '25 Jessie St. at Ecker Square', city: 'San Francisco', zipcode: '94105', hours: 'Telephone only 8 a.m. - 5 p.m. No Walk ins', wheelchair_accessible: 1, muni_bus_accessible: 1, bart_accessible: 1, muni_train_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: 'Montgomery Station', directions: 'From Montgomery Street Station walk on Market St. towards Ferry Bldg; make a right hand turn into Ecker Street and continue going straight until Ecker Square at Jessie Street before Mission Street'},
-
-  { name: 'Carolyn Robertson', email: 'crobertson@ci.fremont.ca.us', phone: '(510) 574-2003', fax: '(510) 574-2001', address: '39155 Liberty Street Suite A110', city: 'Fremont', zipcode: '94538', hours: '8:00 to 5:00 p.m. M-F /Weekend and evening hours by appointment', wheelchair_accessible: 1, muni_bus_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: 'Fremont BART/ AC 328', directions: '2 blocks walk west from Fremont BART Station or AC Transit bus 328 stops in front of FRC'},
-
-  { name: 'Bianca Sierra', email: 'biancasierra@centrolegal.org', phone: '(510) 437-1554 ext.111', fax: '(510) 437-9164', address: '2501 International Blvd', city: 'Oakland', zipcode: '94601', wheelchair_accessible: 1, muni_bus_accessible: 1, bart_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: 'Fruitvale Bart/Bus 1 and 1R', directions: 'The bus (1 and 1R) leaves you on the corner of 26th and International. We are located on 25th and International. Walk one block north on International and arrive at 2501 International Blvd. From Fruitvale Bart: walk 10 blocks north on E12th until you arrive at 25th and then make a right. We are on the corner of 25th and International Blvd.', parking_fees: 'Free and low cost legal services'},
-
-  { name: 'Carl Vinson', email: 'cvinson@tvhoc.org', phone: '(925)373-3134', fax: '(925)373-3934', address: '20-A South L Street', city: 'Livermore', zipcode: '94550', hours: 'Monday-Friday 9 - 4:30', wheelchair_accessible: 1, muni_bus_accessible: 1, ac_bus_accessible: 1, directions: 'From the Hacienda Bart station take the 72 bus and stop at South L st. and railroad bus stop.', parking_fees: '$45 Individual-Housing Opportunities; $65.00 Married-Housing Opportunities; $25.00-Individual Family Stability; $50.00-Married Family Stability'},
-
-  { name: 'Lisa Forti', email: 'lisaf at urbanstrategies.org', phone: '(510)463-2882', fax: '(510)893-6657', address: '672 13th St', city: 'Oakland', zipcode: '94612', wheelchair_accessible: 1, muni_bus_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: 'Broadway & 13th', directions: 'From 12 St/City Center BART, walk down the City Center mall, then cross the street, keep walking straight for 2 more blocks, through the Dellums Federal buildings and you will hit the Park entrance- open gates, we are on the right near the fountain.'},
-
-  { name: 'Jeff Butler', email: 'jbutler@anewamerica.org', phone: '(510)540-7785', fax: '(510)540-7786 ', address: '1918 University Ave', city: 'Berkeley', zipcode: '94117'},
-
-  { name: 'Elizabeth Gomez', email: 'outreach@accfb.org', phone: '(510) 635-3663', fax: '(510) 635-3773', address: '7900 Edgewater Drv', city: 'Oakland', zipcode: '94621', wheelchair_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: 'Edgewater Drive'},
-
-  { address: '2000 San Pablo Avenue', city: 'Oakland', zipcode: '94612'},
-
-  { name: 'Jill Sturm', email: 'jill@sfearn.org', phone: '(415) 217-3670', fax: '(415) 217-3663', address: '235 Montgomery Street, Suite 300', city: 'San Francisco', zipcode: '94104', wheelchair_accessible: 1, muni_bus_accessible: 1, bart_accessible: 1, public_transportation_stop: 'Montgomery Street BART'},
-
-  { name: 'Lena Robinson', email: 'lena.robinson@sf.frb.org', phone: '(415)974-2717', fax: '415-393-1920', address: '101 Market Street', city: 'San Francisco', zipcode: '94105', hours: '10:00 a.m.- 6:00 p.m.', wheelchair_accessible: 1, muni_bus_accessible: 1, bart_accessible: 1, muni_train_accessible: 1, public_transportation_stop: 'Embarcadero & Main St.'},
-
-  { name: 'Sarah Lindsay', email: 'slindsay@onecalfoundation.org', phone: '(510)663-2253 x 303', fax: '(510)663-4855', address: '1438 Webster Street, Suite 101', city: 'Oakland', zipcode: '94612', hours: 'Monday-Thursday: 9 AM- 4 PM\r\nFriday: 9 AM- 5 PM', wheelchair_accessible: 1, bart_accessible: 1, public_transportation_stop: '12th Street - City Center', parking_meters: 1, paid_parking_lot: 1},
-
-  { name: 'Sayla Eisner-Mix', email: 'saylae@peoplesfederalcu.org', phone: '(510)267-0450 x305', fax: '(510)267-0452', address: '1432 7th Street', city: 'Oakland', zipcode: '94607', wheelchair_accessible: 1, muni_bus_accessible: 1, bart_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: 'West Oakland BART', directions: 'Across the street from the West Oakland BART station.  AC Transit Routes 26, 31 and 62 stop at BART', free_street_parking: 1},
-
-  { name: 'Vanessa Muniz', email: 'contact@uwba.org', phone: '(510)238-2410 ', fax: '(510) 451-8271 ', address: '1970 Broadway Avenue', city: 'Oakland', zipcode: '94612'},
-
-  { address: '1433 Webster Street', city: 'Oakland', zipcode: '94612'},
-
-  { name: 'Kimberley Jones', email: 'rserna@calreinvest.org', phone: '(415)864-3980', fax: '(415)864-3981', address: '474 Valencia Street #230', city: 'San Francisco', zipcode: '94103', wheelchair_accessible: 1, muni_bus_accessible: 1, bart_accessible: 1, muni_bus_accessible: 1, public_transportation_stop: 'Mission/16th Street BART', parking_meters: 1},
-
-  { name: 'Charise Fong', email: 'cfong@ebaldc.org', phone: '(510) 287-5353 x330', fax: '(510) 763-4143', address: '310 8th Street Suite 200', city: 'Oakland', zipcode: '94607', wheelchair_accessible: 1, muni_bus_accessible: 1, bart_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: 'Lake Merrit', parking_meters: 1, paid_parking_lot: 1, free_street_parking: 1, parking_fees: 'None\r'},
-
-  { name: 'Lauren Leimbach', email: 'Lauren@communityfinancialresources.net', phone: '(510) 559-8638', fax: '(510) 559-8638 (call before)', address: '771 Euclid Avenue', city: 'Berkeley', zipcode: '94708', wheelchair_accessible: 1, muni_bus_accessible: 1, ac_bus_accessible: 1, parking_meters: 1, paid_parking_lot: 1, free_street_parking: 1, parking_fees: 'Negotiable by Service'},
-
-  { name: 'Michael Radding', email: 'mail@cceb.org', phone: '(510)768-3100', fax: '(510) 451-6998', address: '433 Jefferson St', city: 'Oakland', zipcode: '94607', wheelchair_accessible: 1, bart_accessible: 1, ac_bus_accessible: 1, parking_meters: 1},
-
-  { name: 'Terry Rabb', email: 'trabb@oaklandnet.com', phone: '(510)663-2253', fax: '(510)238-2367', address: '150 Frank H Ogawa Plaza #4340', city: 'Oakland', zipcode: '94612', hours: '8:30 AM to 5:00 PM', bart_accessible: 1, public_transportation_stop: '12th St. Oakland City Center', directions: 'Head northeast on Broadway toward 13th St		\r\n\r\nSlight left at Frank H Ogawa Plaza'},
-
-  { name: 'Terry Rabb', email: 'trabb@omcu.com', phone: '(510)637-6600', address: '140 Frank Ogawa H Plaza # 6301', city: 'Oakland', zipcode: '94612', hours: 'Monday, Thursday Friday, 9:00am-4:00pm', bart_accessible: 1, paid_parking_lot: 1},
-
-  { name: 'Tyrone Cosey', email: 'hcoakland@operationhope.org', phone: '(510)535-6700 ', address: '3062 East 9th Street', city: 'Oakland', zipcode: '94601', hours: '9am - 7pm'},
-
-  { name: 'Julie Cosenza', email: 'jcosenza@brighter-beginnings.org', phone: '(510)903-7529', fax: '(510)437-8955', address: '2648 International Blvd.', city: 'Oakland', zipcode: '94601', hours: ' 9:00am-5:00pm ', wheelchair_accessible: 1, bart_accessible: 1, ac_bus_accessible: 1, directions: 'Close to the Fruitvale BART Station', free_parking: 1, free_street_parking: 1},
-
-  { name: 'Debbie Crowson', email: 'dcrowson@coopfcu.org', phone: '(510)295-1644', fax: '(510)841-7856', address: '2001 Ashby Avenue', city: 'Berkeley', zipcode: '94703', hours: 'Mon-Thurs 9:30 -5:00 Fri 9:30 - 6:00', wheelchair_accessible: 1, muni_bus_accessible: 1, bart_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: 'Ashby Avenue', free_parking: 1},
-
-  { name: 'Public Health Clearinghouse', email: 'kathleen.paulo@acgov.org', phone: '(888)604-4636', fax: '(888)604-4636', address: '1000 Broadway Avenue, Suite 500', city: 'Oakland', zipcode: '94607', bart_accessible: 1, ac_bus_accessible: 1},
-
-  { name: 'Kathy Chao', email: 'kchao@lfcd.org', phone: '(510)533-8850', fax: '(510)533-1516', address: '2325 E. 12th Street', city: 'Oakland', zipcode: '94601', hours: '9am to 5pm, closed 12pm to 1pm for lunch', wheelchair_accessible: 1, bart_accessible: 1, ac_bus_accessible: 1, free_parking: 1, free_street_parking: 1},
-
-  { name: 'Wanda Remmers', email: 'services@Housingrights.com', phone: '(800)261-2298', fax: '(510)548-5805', address: '2699 San Pablo Ave.', city: 'Berkeley', zipcode: '94702', hours: 'Monday thru Thursday 9 to 4.  Friday 9 to 2', wheelchair_accessible: 1, bart_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: 'University and San Pablo Avenues', directions: '6 blocks from N. Berkeley BART', parking_meters: 1, free_street_parking: 1},
-
-  { address: '8501 International Boulevard', city: 'Oakland', zipcode: '94621'},
-
-  { address: '439 A Street', city: 'Hayward', zipcode: '94541'},
-
-  { name: 'Alicia Perez', email: 'aperez@oaklandnet.com', phone: '(510)238-6368', fax: '(510)238-2062', address: '250 Frank H Ogawa Plaza', city: 'Oakland', zipcode: '94612', bart_accessible: 1, public_transportation_stop: '12th St. Oakland City Center', directions: 'Head northeast on Broadway toward 13th St		\r\n\r\nSlight left at Frank H Ogawa Plaza'},
-
-  { name: 'Lindsay Rojas', email: 'unitycouncil@unitycouncil.org', phone: '(510)535-6900', fax: '(510)534-7771', address: '1900 fruitvale ave suite 2b', city: 'Oakland', zipcode: '94601'},
-
-  { name: 'Silvana Hackett', email: 'info@edenir.org', phone: '(510)537-2710', fax: '(510)537-0986', address: '570 B Street', city: 'Hayward', zipcode: '94541', bart_accessible: 1, public_transportation_stop: 'Hayward Station', directions: 'Head southwest on B St toward Grand St'},
-
-  { name: 'Ingrid Jacobson ', email: 'ingrid.jacobson@gmail.com', phone: '(510)467-2534', address: '731 Market Street', city: 'San Francisco', zipcode: '94103', bart_accessible: 1, public_transportation_stop: 'Montgomery', directions: 'Head southwest on Market St toward New Montgomery St'},
-
-  { name: 'Patricia Johnson', email: 'trish@gametheoryacademy.org', phone: '(510)459-0938', address: '337 17th St. #101', city: 'Oakland', zipcode: '94612', bart_accessible: 1, ac_bus_accessible: 1, public_transportation_stop: '17th and Broadway'}
+  { address: '25800 Carlos Bee Blvd', city: 'Hayward', zipcode: '94542', organization_id: orgs[2].id},
 ])
