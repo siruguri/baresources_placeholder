@@ -124,3 +124,12 @@ Location.create([
 
   { address: '25800 Carlos Bee Blvd', city: 'Hayward', zipcode: '94542', organization_id: orgs[2].id},
 ])
+
+# Create a category -> service association
+c=Category.find_by_name('Asset Building and Investments')
+sers=Service.all
+sers[0].category=c
+sers[0].save
+locs=Location.all
+locs[0].services << sers[0]
+locs[0].save

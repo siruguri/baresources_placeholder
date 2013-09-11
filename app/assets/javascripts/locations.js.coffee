@@ -13,7 +13,7 @@ $(document).ready ->
       listing_id_match = true
       listing_tags = listing.getAttribute('data-tags').split(' ')
       $.each(checked_ids.split(','), (b, id) -> 
-        if listing_tags.indexOf(id) == -1 
+        if jQuery.inArray(id, listing_tags) == -1 
           listing_id_match = false
           # only need one mismatch - looping again might override the false value if the next id is a match
           return
@@ -75,8 +75,9 @@ $ ->
       $('.location_listing').each((a, listing) -> 
         listing_id_match = true
         listing_tags = listing.getAttribute('data-tags').split(' ')
-        $.each(checked_ids, (b, id) -> 
-          if listing_tags.indexOf(id) == -1 
+        $.each(checked_ids, (b, id) ->
+          # if listing_tags.indexOf(id) == -1
+          if jQuery.inArray(id, listing_tags) == -1
             listing_id_match = false
             # only need one mismatch - looping again might override the false value if the next id is a match
             return
