@@ -1,5 +1,22 @@
 module LocationsHelper
   
+  def make_gmaps_tag
+    mesg= <<-JCODE
+    <script type='text/javascript'>
+      $(document).ready(function() {
+        handler = Gmaps.build('Google');
+        handler.buildMap({ provider: {}, internal: {id: 'map'}}, function() {
+           markers = handler.addMarkers(#{@json.to_json});
+           handler.bounds.extendWith(markers);
+           handler.fitMapToBounds();
+        });
+      });
+    </script>
+    JCODE
+
+    mesg
+  end
+
   def checkbox_helper(value)
     if value == true
       image_tag('check.png')

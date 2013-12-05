@@ -1,9 +1,14 @@
 %br/
+%script{src: "//maps.google.com/maps/api/js?v=3.13&sensor=false&libraries=geometry", type: "text/javascript"}
+%script{src: "//google-maps-utility-library-v3.googlecode.com/svn/tags/markerclustererplus/2.0.14/src/markerclusterer_packed.js", type: "text/javascript"}
+
 .row
   .span12
     = simple_format(Page.find_by_name('Home').try(:body))
-    
-= gmaps('markers' => {"data" => @json}, 'map_options' => { 'raw' => '{ scrollwheel: false }' })
+
+.div{style: 'width: 800px;'}
+  #map{style: 'width: 800px; height: 400px;'}
+
 
 .row
   .span7
@@ -13,3 +18,5 @@
   #sidebar.span4.well
     = render :partial => 'filters', :locals => {:locations => @locations}
     = render :partial => 'address_search'
+
+= raw make_gmaps_tag    

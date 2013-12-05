@@ -23,8 +23,12 @@ class LocationsController < ApplicationController
       @address = "Your Address"
       @results_count = "#{@locations.size} results"
     end
-    
-    @json = @locations.to_gmaps4rails
+
+    # Upgrading Gmaps4Rails to v2
+    @json = Gmaps4rails.build_markers(@locations) do |loc, marker|
+      marker.lat loc.latitude
+      marker.lng loc.longitude
+    end
     
     respond_to do |format|
       format.html # index.html.erb
