@@ -6,9 +6,8 @@
   .span12
     = simple_format(Page.find_by_name('Home').try(:body))
 
-.div{style: 'width: 800px;'}
-  #map{style: 'width: 800px; height: 400px;'}
-
+.map_container
+  #map.gmaps4rails_map{style: 'overflow:hidden; position:relative; background-color: #e5e3df;'}
 
 .row
   .span7
