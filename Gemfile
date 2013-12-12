@@ -31,7 +31,13 @@ group :developemt do
   gem 'foreman'
 end
 
+#testing with rspec
+
+gem 'rspec-rails', group: [:development, :test]
+
 group :test do
   gem 'capybara'
   gem "factory_girl_rails"
+  gem 'database_cleaner'
+  gem "email_spec"
 end

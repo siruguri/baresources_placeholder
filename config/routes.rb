@@ -3,7 +3,6 @@ Bayarearesources::Application.routes.draw do
   resources :locations, :only => [:index, :show]
   devise_for :users
   
-  
   match '/admin/' => 'admin/organizations#index'
   namespace :admin do
     resources :counties
