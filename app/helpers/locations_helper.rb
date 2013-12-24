@@ -1,18 +1,4 @@
 module LocationsHelper
-  
-  def make_gmaps_tag
-    mesg= <<-JCODE
-    <script type='text/javascript'>
-      $(document).ready(function() {
-          markers = #{@maps_json.to_json};
-	  marker_data = build_maps(markers);
-      });
-
-    </script>
-    JCODE
-
-    mesg
-  end
 
   def checkbox_helper(value)
     if value == true
