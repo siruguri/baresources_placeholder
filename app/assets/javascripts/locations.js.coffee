@@ -1,4 +1,4 @@
-window.add_hide_flags = (marker_data, checklist_ids) ->
+window.add_hide_flags = (marker_data, checked_ids) ->
   # For each id in checklist_id, go through the session marker_data and set flags accordingly
 
   if $.isEmptyObject(checked_ids) == false
@@ -53,8 +53,8 @@ window.build_maps = ->
     handler.bounds.extendWith marker_objs
     handler.fitMapToBounds()
     $.session.set('marker_objs', marker_objs)
-
-  $.session.set('map_handler', handler)
+    $.session.set('map_handler', handler)
+  
   undefined
 
 # This is really the key function where the flagged markers are hidden
@@ -75,13 +75,13 @@ window.redo_markers = (marker_data, checked_ids, marker_objs) ->
 
 $ ->
   # Read the raw data from the JSON if it's not there already
-  if $.session.get('marker_data') == nil
+  if $.isEmptyObject $.session.get('marker_data')
     json = $(".location_map_data").text()
     marker_data = $.parseJSON json
     $.session.set('marker_data', marker_data)
 
   # build map if necessary
-  build_maps if $.isEmptyObject($.session.get('map_handler'))
+  build_maps() if $.isEmptyObject($.session.get('map_handler'))
 
   # At this point the session will also have a marker_objs key
   redo_markers $.session.get('marker_data'), $.session.get('checked_ids'), $.session.get('marker_objs')
