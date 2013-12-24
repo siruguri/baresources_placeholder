@@ -24,6 +24,10 @@ capybara-*.html
 /db/*.sqlite3
 
 /public/system/*
+
+# Need to ignore static html files I create for testing -- sameer
+/public/*.html
+
 /coverage/
 /spec/tmp/*
 **.orig

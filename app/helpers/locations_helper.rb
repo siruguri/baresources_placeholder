@@ -4,13 +4,10 @@ module LocationsHelper
     mesg= <<-JCODE
     <script type='text/javascript'>
       $(document).ready(function() {
-        handler = Gmaps.build('Google');
-        handler.buildMap({ provider: {}, internal: {id: 'map'}}, function() {
-           markers = handler.addMarkers(#{@json.to_json});
-           handler.bounds.extendWith(markers);
-           handler.fitMapToBounds();
-        });
+          markers = #{@maps_json.to_json};
+	  marker_data = build_maps(markers);
       });
+
     </script>
     JCODE
 

@@ -1,0 +1,119 @@
+# helper functions
+
+window.build_maps = (markers) ->
+  handler = Gmaps.build('Google')
+  handler.buildMap { provider: {}, internal: {id: 'map'}}, -> 
+    marker_data=handler.addMarkers markers
+    handler.bounds.extendWith marker_data
+    handler.fitMapToBounds()
+    window.marker_data=marker_data
+
+  # Let's put this marker data into the session
+  $.session.set('marker_json', markers)
+  window.handler=handler
+  undefined
+  
+window.marker_by_id = (markers, id) ->
+  m for m in markers when m.id is id
+
+# set state
+$ ->
+  checked_ids = $.session.get('checked_ids')
+  if($.isEmptyObject(checked_ids) == false)
+    console.log(checked_ids)
+
+    session_markers = $.session.get('marker_json')
+    markers_to_display = new Array()
+    listings_to_display = new Array()
+    listing_ids_to_display = new Array()
+    $(checked_ids.split(',')).each((x, id) ->
+      $('#'+id).attr('checked', true)
+      $('#'+id+'_services').show()
+    )
+    $('.location_listing').hide()
+    $('.location_listing').each((a, listing) -> 
+      listing_id_match = true
+      listing_tags = listing.getAttribute('data-tags').split(' ')
+      $.each(checked_ids.split(','), (b, id) -> 
+        if jQuery.inArray(id, listing_tags) == -1 
+          listing_id_match = false
+          # the filters are an AND condition so we only need one mismatch - looping again might override the false value if the next id is a match
+          return
+      )
+      if listing_id_match == true
+        listing_ids_to_display.push(parseInt(listing.getAttribute('db_id')))
+        listings_to_display.push(listing)
+        $('#'+listing.getAttribute('id')).show()
+    )
+    if listings_to_display.length == 0
+      $("#results_count").html('There are no results that match your search criteria')
+    else if listings_to_display.length == 1
+      $("#results_count").html(listings_to_display.length + ' result')
+    else
+      $("#results_count").html(listings_to_display.length + ' results')
+    markers_to_draw=pick_markers session_markers, listing_ids_to_display
+    build_maps(markers_to_draw)
+    
+# clear filters
+$ -> 
+  $('#clear_filters').click -> 
+    $(':checkbox').attr('checked', false)
+    $('.services').hide()
+    $.session.delete('checked_ids')
+    listings_to_display = new Array()
+    $('.location_listing').each((a, listing) -> 
+      listings_to_display.push(listing)
+      $('#'+listing.getAttribute('id')).show()
+    )
+    if(listings_to_display.length == 0)
+      $("#results_count").html('There are no results that match your search')
+    else if(listings_to_display.length == 1)
+      $("#results_count").html(listings_to_display.length + ' result')
+    else
+      $("#results_count").html(listings_to_display.length + ' results')
+
+
+# filter results
+$ -> 
+  $(':checkbox').click -> 
+    checked_ids = new Array()
+    listings_to_display = new Array()
+    $(':checkbox').each((i, value) ->  
+      if $('#' + value.getAttribute('id')).is(':checked')
+        $('#' + value.getAttribute('id') + '_services').show()
+        checked_ids.push(value.getAttribute('id'))
+      else 
+        $('#' + value.getAttribute('id') + '_services').hide()
+        $('#' + value.getAttribute('id') + '_services :checkbox').attr('checked', false)
+    )
+    $.unique(checked_ids)
+    $.session.set('checked_ids', checked_ids)
+    
+    
+    if checked_ids.length == 0
+      $('.location_listing').each((a, listing) -> 
+        listings_to_display.push(listing)
+        $('#'+listing.getAttribute('id')).show()
+      )  
+    else 
+      $('.location_listing').hide()
+      $('.location_listing').each((a, listing) -> 
+        listing_id_match = true
+        listing_tags = listing.getAttribute('data-tags').split(' ')
+        $.each(checked_ids, (b, id) ->
+          # if listing_tags.indexOf(id) == -1
+          if jQuery.inArray(id, listing_tags) == -1
+            listing_id_match = false
+            # only need one mismatch - looping again might override the false value if the next id is a match
+            return
+        )
+        if listing_id_match == true
+          listings_to_display.push(listing)
+          $('#'+listing.getAttribute('id')).show() 
+      )
+    if listings_to_display.length == 0
+      $("#results_count").html('There are no results that match your search criteria')
+    else if listings_to_display.length == 1
+      $("#results_count").html(listings_to_display.length + ' result')
+    else
+      $("#results_count").html(listings_to_display.length + ' results')

@@ -1,10 +1,14 @@
+.location_map_data{"style" => 'display: none'}
+  = raw @maps_json
+
 %h3
   %span{:id => 'results_count'}
     == #{@results_count}
   %br/
 %table.table
   - @locations.each do |location|
-    %tr{:id=>"location_#{location.id}", :class=>"location_listing", 'data-tags'=>"#{data_tags(location)}"}
+    - # Adding a separate attribute to store db_id so it's easier than dealing with existing uses of the id attribute
+    %tr{:id=>"location_#{location.id}", :class=>"location_listing", 'data-tags'=>"#{data_tags(location)}", 'db_id' => location.id}
       %td
         %h3
           = link_to location.try(:organization).try(:name), location_path(location)
