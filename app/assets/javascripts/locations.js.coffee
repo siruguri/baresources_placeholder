@@ -46,12 +46,15 @@ window.add_hide_flags = (marker_data, checked_ids) ->
 window.build_maps = ->
   # We build the handler and marker objects array in here. The latter array is in order that the objects are in the JSON.
   handler = Gmaps.build('Google')
-  markers = $.session.get('marker_data')
+  markers_json = $.session.get('marker_data')
   
   handler.buildMap { provider: {}, internal: {id: 'map'}}, ->
-    marker_objs=handler.addMarkers markers
+    markers_json = jQuery.trim markers_json
+    marker_objs=handler.addMarkers markers_json
+    alert 'using json: ' + markers_json
     handler.bounds.extendWith marker_objs
-    handler.fitMapToBounds()
+    
+    alert 'Done working with map'
     $.session.set('marker_objs', marker_objs)
     $.session.set('map_handler', handler)
   
@@ -75,13 +78,13 @@ window.redo_markers = (marker_data, checked_ids, marker_objs) ->
 
 $ ->
   # Read the raw data from the JSON if it's not there already
+  console.log 'Starting scripts'
   if $.isEmptyObject $.session.get('marker_data')
     json = $(".location_map_data").text()
-    marker_data = $.parseJSON json
-    $.session.set('marker_data', marker_data)
+    $.session.set('marker_data', json)
 
   # build map if necessary
-  build_maps() if $.isEmptyObject($.session.get('map_handler'))
+  build_maps() if true or $.isEmptyObject($.session.get('map_handler'))
 
   # At this point the session will also have a marker_objs key
   redo_markers $.session.get('marker_data'), $.session.get('checked_ids'), $.session.get('marker_objs')

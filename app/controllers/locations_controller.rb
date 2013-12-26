@@ -26,7 +26,8 @@ class LocationsController < ApplicationController
 
     # Upgrading Gmaps4Rails to v2
     @maps_json = (@locations.map do |loc|
-      {"id" => loc.id, "lat" => loc.latitude, "lng" => loc.longitude, "hide_flag" => false}
+                    #      {"id" => loc.id, "lat" => loc.latitude, "lng" => loc.longitude, "hide_flag" => false}
+                    {"lat" => loc.latitude, "lng" => loc.longitude}
     end).to_json
     
     respond_to do |format|
