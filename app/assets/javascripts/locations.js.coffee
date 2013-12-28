@@ -4,7 +4,6 @@ window.add_hide_flags = (marker_data, checked_ids) ->
   if $.isEmptyObject(checked_ids) == false
     console.log checked_ids
 
-    session_markers = marker_data
     markers_to_display = new Array()
     listings_to_display = new Array()
 
@@ -30,7 +29,9 @@ window.add_hide_flags = (marker_data, checked_ids) ->
         $('#'+listing.getAttribute('id')).show()
       else
         # Hide this listing on the map
-        m['hide_flag']=true for m in marker_data when m.id=listing.getAttribute('id')
+        m['hide_flag']=true for m in marker_data when m.id == parseInt(listing.getAttribute('db_id'))
+
+        undefined
       )
 
     if listings_to_display.length == 0
@@ -40,52 +41,75 @@ window.add_hide_flags = (marker_data, checked_ids) ->
         $("#results_count").html(listings_to_display.length + ' result')
       else
         $("#results_count").html(listings_to_display.length + ' results')
+  else 
+    $('.location_listing').show()
+
+    # Unhide all flags in the marker json
+    m['hide_flag'] = false for m in marker_data
 
   undefined
 
-window.build_maps = ->
+window.build_maps = (parsed_json) ->
   # We build the handler and marker objects array in here. The latter array is in order that the objects are in the JSON.
   handler = Gmaps.build('Google')
-  markers_json = $.session.get('marker_data')
   
   handler.buildMap { provider: {}, internal: {id: 'map'}}, ->
-    markers_json = jQuery.trim markers_json
-    marker_objs=handler.addMarkers markers_json
-    alert 'using json: ' + markers_json
-    handler.bounds.extendWith marker_objs
-    
-    alert 'Done working with map'
-    $.session.set('marker_objs', marker_objs)
-    $.session.set('map_handler', handler)
+    window.map_markers=handler.addMarkers(parsed_json) 
+    # Remove unchecked listings, and hide them on the map
+
+    redraw_display window.parsed_json, $.session.get('checked_ids'), window.map_markers
+
+    handler.bounds.extendWith window.map_markers
+    handler.fitMapToBounds()
+    undefined
   
   undefined
 
 # This is really the key function where the flagged markers are hidden
 window.hide_markers = (marker_data, marker_objs) ->
+  marker_objs[i].show() for i in [0..marker_data.length-1] 
   marker_objs[i].hide() for i in [0..marker_data.length-1] when marker_data[i]['hide_flag']
-
-window.redo_markers = (marker_data, checked_ids, marker_objs) ->
-  # checked_ids is either there, or nothing has been checked, in which case nothing should be flagged to hide.
-  add_hide_flags marker_data, checked_ids
-
-  # Now hide the markers
-  hide_markers marker_data, marker_objs
   undefined
 
+window.redraw_display = (marker_data_objs, checked_ids, marker_objs) ->
+  # checked_ids is either there, or nothing has been checked, in which case nothing should be flagged to hide.
+  add_hide_flags marker_data_objs, checked_ids
 
-# Set state: do everything that needs to be done when the page is loaded/refreshed. On refresh, we'll attempt to use data
-# that's in the session.
+  # Now hide the markers
+  hide_markers marker_data_objs, marker_objs
+
+  undefined
+
+# Set state: set globals when the page is loaded/refreshed. 
 
 $ ->
-  # Read the raw data from the JSON if it's not there already
-  console.log 'Starting scripts'
-  if $.isEmptyObject $.session.get('marker_data')
-    json = $(".location_map_data").text()
-    $.session.set('marker_data', json)
+  console.log 'Starting scripts'; $.session.clear()
 
-  # build map if necessary
-  build_maps() if true or $.isEmptyObject($.session.get('map_handler'))
-
-  # At this point the session will also have a marker_objs key
-  redo_markers $.session.get('marker_data'), $.session.get('checked_ids'), $.session.get('marker_objs')
+  marker_json = $(".location_map_data").text().trim()
+  window.parsed_json = jQuery.parseJSON marker_json
   
+  # build full map on each load - we have to do the redraw display inside the callback of the build_maps otherwise
+  # it'll run into timing issues.
+  build_maps window.parsed_json
+  
+  undefined
+
+# Let's set up an event handler for when a checkbox is clicked.  
+$ ->
+  $(':checkbox').click ->
+    checked_ids = new Array()
+
+    # Handle the display of the taxonomy first.
+    $(':checkbox').each((i, value) ->
+      if $('#' + value.getAttribute('id')).is(':checked')
+        $('#' + value.getAttribute('id') + '_services').show()
+        checked_ids.push(value.getAttribute('id'))
+      else
+        $('#' + value.getAttribute('id') + '_services').hide()
+        $('#' + value.getAttribute('id') + '_services :checkbox').attr('checked', false)
+    )
+    $.unique(checked_ids)
+    $.session.set('checked_ids', checked_ids)
+
+    # Now handle the display of listings on the map and in the list
+    redraw_display window.parsed_json, $.session.get('checked_ids'), window.map_markers

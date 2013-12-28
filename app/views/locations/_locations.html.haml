@@ -1,5 +1,5 @@
 .location_map_data{"style" => 'display: none'}
-  = raw @maps_json
+  = raw @maps_json.to_json
 
 %h3
   %span{:id => 'results_count'}
