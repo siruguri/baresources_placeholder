@@ -28,6 +28,7 @@ class LocationsController < ApplicationController
     @maps_json = Gmaps4rails.build_markers(@locations) do |loc, marker|
       marker.lat loc.latitude
       marker.lng loc.longitude
+      marker.infowindow loc.gmaps4rails_infowindow
       marker.json({"id" => loc.id })
       marker.json({"hide_flag" => false })
     end

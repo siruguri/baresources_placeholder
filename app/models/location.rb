@@ -50,6 +50,6 @@ class Location < ActiveRecord::Base
         end
       end
     end
-    return string
+    return HTMLEntities.new.encode(string)
   end
 end
